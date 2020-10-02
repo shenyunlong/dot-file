@@ -108,7 +108,7 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-abolish'
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'yuttie/comfortable-motion.vim'
@@ -131,6 +131,8 @@ Plug 'mhinz/vim-startify'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'ryanoasis/vim-devicons'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'liuchengxu/vista.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -147,71 +149,71 @@ colorscheme gruvbox
 " ===
 
 " ale linter settings
-let g:ale_linters = {
-\   'c': ['clangd'],
-\   'cpp': ['clangd'],
-\   'python': ['pyls', 'pylint'],
-\   'vim': ['vimls'],
-\   'sh': ['shellcheck'],
-\   'sql': ['sqlint'],
-\   'go': ['golangserver'],
-\   'cmake': ['cmakelint'],
-\   'json': ['jsonlint'],
-\}
+" let g:ale_linters = {
+" \   'c': ['clangd'],
+" \   'cpp': ['clangd'],
+" \   'python': ['pyls', 'pylint'],
+" \   'vim': ['vimls'],
+" \   'sh': ['shellcheck'],
+" \   'sql': ['sqlint'],
+" \   'go': ['golangserver'],
+" \   'cmake': ['cmakelint'],
+" \   'json': ['jsonlint'],
+" \}
 
-" PS: bash-language-server is not work, and shfmt sometime must be syntax
-" correct at first
-" So far, i donot figure out how to specify the standard of c/cpp
-" using ale_c/cpp_clangd_options
-let g:ale_linters_explicit = 1
+" " PS: bash-language-server is not work, and shfmt sometime must be syntax
+" " correct at first
+" " So far, i donot figure out how to specify the standard of c/cpp
+" " using ale_c/cpp_clangd_options
+" let g:ale_linters_explicit = 1
 
-" error navigatation
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+" " error navigatation
+" nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+" nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
-" go to definition
-nmap <silent> <C-h> <Plug>(ale_go_to_definition)
+" " go to definition
+" nmap <silent> <C-h> <Plug>(ale_go_to_definition)
 
-" alefix, format tool
-noremap <leader>F :<C-u>ALEFix<CR>
+" " alefix, format tool
+" noremap <leader>F :<C-u>ALEFix<CR>
 
-" use built-in completiono in ale which using lsp
-let g:ale_completion_enabled = 1
-let g:ale_completion_autoimport = 1
+" " use built-in completiono in ale which using lsp
+" let g:ale_completion_enabled = 1
+" let g:ale_completion_autoimport = 1
 
-" sadly. unfortunately most lsp cannot support hover, of course include clangd
-let g:ale_hover_to_preview = 1
+" " sadly. unfortunately most lsp cannot support hover, of course include clangd
+" let g:ale_hover_to_preview = 1
 
-let g:ale_sign_column_always = 1
-let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_text_changed = 1
-let g:ale_lint_on_enter = 1
-let g:ale_set_signs = 0
-let g:ale_auto_refresh_delay = 1
+" let g:ale_sign_column_always = 1
+" let g:ale_lint_on_insert_leave = 1
+" let g:ale_lint_on_text_changed = 1
+" let g:ale_lint_on_enter = 1
+" let g:ale_set_signs = 0
+" let g:ale_auto_refresh_delay = 1
 
-" ale fixer settings, add when need
-let g:ale_fixers = {
-\   'c': ['clang-format'],
-\   'cpp': ['clang-format'],
-\   'cmake': ['cmakeformat'],
-\   'python': ['black', 'autopep8', 'isort'],
-\   'sql': ['pgformatter'],
-\   'go': ['gofmt'],
-\   'json': ['prettier'],
-\   'sh': ['shfmt'],
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\}
+" " ale fixer settings, add when need
+" let g:ale_fixers = {
+" \   'c': ['clang-format'],
+" \   'cpp': ['clang-format'],
+" \   'cmake': ['cmakeformat'],
+" \   'python': ['black', 'autopep8', 'isort'],
+" \   'sql': ['pgformatter'],
+" \   'go': ['gofmt'],
+" \   'json': ['prettier'],
+" \   'sh': ['shfmt'],
+" \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+" \}
 
-" sorry i have to say gofmt is the least-useful formatter
-let g:ale_fix_on_save = 0
+" " sorry i have to say gofmt is the least-useful formatter
+" let g:ale_fix_on_save = 0
 
-" cland options
-" NOTE: it does not work if you use clangd.
-let g:ale_cpp_clangd_options = ''
+" " cland options
+" " NOTE: it does not work if you use clangd.
+" let g:ale_cpp_clangd_options = ''
 
-" clangformat options
-let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
-let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
+" " clangformat options
+" let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
+" let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
 
 
 " ===
@@ -285,6 +287,8 @@ let g:AutoPairsShortcutBackInsert = ',b'
 " to avoid some bugs when use rainbow and devicons simultaneously.
 " see bracket issue https://github.com/ryanoasis/vim-devicons/issues/327
 let g:rainbow_conf = {
+  \    'guifgs': ['darkorange3', 'seagreen3', 'firebrick', 'royalblue3'],
+  \    'ctermfgs': ['lightyellow', 'lightcyan', 'lightmagenta', 'lightblue'],
   \    'separately': {
   \       'nerdtree': 0
   \    }
@@ -296,6 +300,7 @@ let g:rainbow_active = 1 " 0 if you want to enable it later via :RainbowToggle
 " === tagbar
 " ===
 nmap <C-b> :TagbarToggle<CR>
+let g:tagbar_iconchars = ['▸', '▾']
 
 
 " ===
@@ -351,8 +356,61 @@ let g:UltiSnipsEditSplit="vertical"
 
 
 " ===
-" === Placeholder
+" === coc.nvim
 " ===
+
+let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-clangd', 'coc-python', 'coc-sql', 'coc-sh', 'coc-cmake']
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+set updatetime=100
+set shortmess+=c
+
+" use <c-o> to trigger completion.
+inoremap <silent><expr> <c-o> coc#refresh()
+
+" use <cr> to comfirm completion.
+inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `<C-k>` and `<C-j>` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> <C-k> <Plug>(coc-diagnostic-prev)
+nmap <silent> <C-j> <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> <C-h> <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocActionAsync('doHover')
+endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>F  <Plug>(coc-format-selected)
+nmap <leader>F  <Plug>(coc-format-selected)
+
+" Remap for do codeAction of selected region
+function! s:cocActionsOpenFromSelected(type) abort
+  execute 'CocCommand actions.open ' . a:type
+endfunction
+xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' .  visualmode()<CR>
+nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+
 
 " NOTE: I tried to use undotree plugin, but it cause a little stall when I
 " turn to command mode.
