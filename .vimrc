@@ -1,8 +1,13 @@
 " My vim configuration. --YLS
 
+" ===
+" === System
+" ===
+
 set autoindent
 set smartindent
 set nu
+set rnu
 set ts=4 sts=4 expandtab sw=4 " tabstop, softtabstop, shiftwidth: indent
 set sr " shiftround
 set ic      " ignorecase, and you can use \C in pattern to force match case
@@ -19,9 +24,14 @@ set mouse=a
 " set hidden for edit multi-file without write immediately
 set hid
 
+" vim built-in statusline settings
+set noshowmode
+set cmdheight=1
+
 set tags=./tags,tags;
 set cursorline
 set encoding=UTF-8
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 
 " for using H to open help document in spilt window
 cnoreabbrev H vert h
@@ -32,7 +42,8 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 
 " the shotcuts to open a new window/tab to show the current dictionary
 let mapleader = ','
-map <leader>ew :e %%
+" this key is conflict with my Leaderf mapping key.
+" map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
@@ -45,7 +56,7 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 
 " quick copy all the file
-nnoremap <leader>c :,% y+<CR>
+nnoremap <leader>y :,% y+<CR>
 " quick copy the word in cursor to paste globally.
 nnoremap <leader>w "+yiw
 
@@ -55,6 +66,7 @@ nnoremap <leader>s :<C-u>w<CR>
 nnoremap <leader>q :<C-u>q<CR>
 
 " quick compile and run this cpp file
+" TODO: use another shortcut key.
 nnoremap <leader>m :!clang++ -std=c++17 -Wall -Wextra -o tmpcpp % && ./tmpcpp && rm ./tmpcpp<CR>
 
 " highlight all its matches of seaching command such as / and %.
@@ -69,10 +81,25 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<CR>
 " the options for insert completions.
 set cot = "menuone, longest"
 
-" the settings for theme tender
+
+" ===
+" === Color settings
+" ===
+
 if (has("termguicolors"))
     set termguicolors
 endif
+
+" https://tomlankhorst.nl/iterm-tmux-vim-true-color/
+" it works for using vim inside tmux.
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+
+
+" ===
+" === vim-plug
+" ===
 
 " Specify a directory for plugins
 " - For Neovim: stdpath('data') . '/plugged'
@@ -98,20 +125,32 @@ Plug 'majutsushi/tagbar'
 Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-user' " dependency of textobj-entire
 Plug 'vim/killersheep' " vim game for showing off vim 8.2 features
+Plug 'lervag/vimtex' " vim filetype plugin for laTeX files.
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+Plug 'mhinz/vim-startify'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'ryanoasis/vim-devicons'
 
 " Initialize plugin system
 call plug#end()
 
-" theme settings
+" ===
+" === Theme
+" ===
+
 set background=dark
 colorscheme gruvbox
 
-" ale settings
+" ===
+" === Asynchronous Lint Engine
+" ===
+
 " ale linter settings
 let g:ale_linters = {
 \   'c': ['clangd'],
 \   'cpp': ['clangd'],
-\   'python': ['pyls'],
+\   'python': ['pyls', 'pylint'],
 \   'vim': ['vimls'],
 \   'sh': ['shellcheck'],
 \   'sql': ['sqlint'],
@@ -124,7 +163,6 @@ let g:ale_linters = {
 " correct at first
 " So far, i donot figure out how to specify the standard of c/cpp
 " using ale_c/cpp_clangd_options
-
 let g:ale_linters_explicit = 1
 
 " error navigatation
@@ -134,10 +172,14 @@ nmap <silent> <C-j> <Plug>(ale_next_wrap)
 " go to definition
 nmap <silent> <C-h> <Plug>(ale_go_to_definition)
 
+" alefix, format tool
+noremap <leader>F :<C-u>ALEFix<CR>
+
 " use built-in completiono in ale which using lsp
 let g:ale_completion_enabled = 1
+let g:ale_completion_autoimport = 1
 
-" unfortunately most lsp cannot support hover, of course include clangd
+" sadly. unfortunately most lsp cannot support hover, of course include clangd
 let g:ale_hover_to_preview = 1
 
 let g:ale_sign_column_always = 1
@@ -152,7 +194,7 @@ let g:ale_fixers = {
 \   'c': ['clang-format'],
 \   'cpp': ['clang-format'],
 \   'cmake': ['cmakeformat'],
-\   'python': ['black'],
+\   'python': ['black', 'autopep8', 'isort'],
 \   'sql': ['pgformatter'],
 \   'go': ['gofmt'],
 \   'json': ['prettier'],
@@ -161,7 +203,6 @@ let g:ale_fixers = {
 \}
 
 " sorry i have to say gofmt is the least-useful formatter
-
 let g:ale_fix_on_save = 0
 
 " cland options
@@ -172,12 +213,11 @@ let g:ale_cpp_clangd_options = ''
 let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
 let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
 
-noremap <leader>F :<C-u>ALEFix<CR>
 
-" airline settings
-" vim built-in statusline settings
-set noshowmode
-set cmdheight=1
+" ===
+" === airline
+" ===
+
 let g:airline_theme = 'gruvbox'
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
@@ -185,19 +225,33 @@ let g:airline#extensions#hunks#non_zero_only = 1
 let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
 let g:airline#extensions#branch#enabled = 1
 
-" comfortable-motion settings
+
+" ===
+" === comfortable-motion
+" ===
+
 let g:comfortable_motion_no_default_key_mappings = 1
 noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(10)<CR>
 noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-10)<CR>
 
-" gitgutter settings
+" ===
+" === gitgutter
+" ===
+
 set updatetime=100
 
-" indentline settings
-" just use indetlint on demand
+
+" ===
+" === indentlint
+" ===
+
 let g:indentLine_enabled = 0
 
-" nerdtree settings
+
+" ===
+" === NERDTree
+" ===
+
 " open NERDTree automatically when vim starts up on opening a directory
 autocmd StdinReadPre * let s:std_in = 1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
@@ -208,17 +262,97 @@ let NERDTreeShowHidden = 0
 " open/close NERDTree with <Ctrl-n>
 nmap <C-n> :NERDTreeToggle<CR>
 
+" change the CWD in each tab as the root dir of tab is changed.
+let g:NERDTreeChDirMode = 3
+
 " Making it prettier
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 let g:NERDTreeWinSize = 25
 
-" autopair settings
+
+" ===
+" === autopairs
+" ===
+
 let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutBackInsert = ',b'
 
-" rainbow settings
+" ===
+" === rainbow
+" ===
+
+" to avoid some bugs when use rainbow and devicons simultaneously.
+" see bracket issue https://github.com/ryanoasis/vim-devicons/issues/327
+let g:rainbow_conf = {
+  \    'separately': {
+  \       'nerdtree': 0
+  \    }
+  \}
 let g:rainbow_active = 1 " 0 if you want to enable it later via :RainbowToggle
 
-" tagbar settings
+
+" ===
+" === tagbar
+" ===
 nmap <C-b> :TagbarToggle<CR>
+
+
+" ===
+" === vimtex
+" ===
+
+let g:tex_flavor='latex'
+let g:vimtex_view_method='skim'
+let g:vimtex_quickfix_mode=0
+set conceallevel=1
+" TODO: add conceal plugin for vimtex.
+
+
+" ===
+" === Leaderf
+" ===
+
+let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+nnoremap <leader>w :LeaderfFunction<CR>
+
+" FIXME: leaderf rg does not work, it stucks when opened.
+" nnoremap <leader>e :Leaderf rg<CR>
+nnoremap <leader>r :Leaderf mru<CR>
+
+" it's expensive to use gtags and my machine is ringing away.
+let g:Lf_GtagsAutoGenerate = 1
+nnoremap <leader>e :Leaderf bufTag<CR>
+nnoremap <leader>g :Leaderf gtags<CR>
+let g:Lf_Gtagslabel = 'default'
+
+
+" ===
+" === termdebug
+" ===
+
+" NOTE that after you quit from termbug, you are not under relative number mode
+" but you can set it by manual through command :set relativenumber.
+nnoremap <leader>t :set relativenumber!<CR> :packadd termdebug<CR> :Termdebug<CR>
+
+
+" ===
+" === UltiSnips
+" ===
+
+" Trigger configuration. You need to change this to something else than <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+
+" ===
+" === Placeholder
+" ===
+
+" NOTE: I tried to use undotree plugin, but it cause a little stall when I
+" turn to command mode.
