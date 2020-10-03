@@ -4,13 +4,14 @@
 " === System
 " ===
 
+
 set autoindent
 set smartindent
 set nu
 set rnu
-set ts=4 sts=4 expandtab sw=4 " tabstop, softtabstop, shiftwidth: indent
-set sr " shiftround
-set ic      " ignorecase, and you can use \C in pattern to force match case
+set ts=4 sts=4 expandtab sw=4   " tabstop, softtabstop, shiftwidth: indent
+set sr  " shiftround
+set ic  " ignorecase, and you can use \C in pattern to force match case
 
 " the # of spcae of indent in cpp is 2 ps: c is 4
 autocmd FileType cpp set sw=2 ts=2 sts=2
@@ -81,6 +82,8 @@ nnoremap <silent> <C-l> :<C-u>nohlsearch<CR>
 " the options for insert completions.
 set cot = "menuone, longest"
 
+" TODO: open images with iterm imgcat
+
 
 " ===
 " === Color settings
@@ -111,7 +114,6 @@ Plug 'tpope/vim-abolish'
 " Plug 'dense-analysis/ale'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'yuttie/comfortable-motion.vim'
 Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
@@ -133,6 +135,9 @@ Plug 'honza/vim-snippets'
 Plug 'ryanoasis/vim-devicons'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'liuchengxu/vista.vim'
+Plug 'ashisha/image.vim', {'for': 'image'}
+Plug 'easymotion/vim-easymotion'
+Plug 'previm/previm', {'for': 'markdown'}
 
 " Initialize plugin system
 call plug#end()
@@ -143,6 +148,7 @@ call plug#end()
 
 set background=dark
 colorscheme gruvbox
+
 
 " ===
 " === Asynchronous Lint Engine
@@ -221,20 +227,36 @@ colorscheme gruvbox
 " ===
 
 let g:airline_theme = 'gruvbox'
-let g:airline#extensions#ale#enabled = 1
+" let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#coc#enabled = 1
+let g:airline#extensions#coc#error_symbol = 'Error:'
+let g:airline#extensions#coc#warning_symbol = 'Warning:'
+let g:airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+let g:airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#hunks#non_zero_only = 1
 let g:airline#extensions#hunks#hunk_symbols = ['+', '~', '-']
 let g:airline#extensions#branch#enabled = 1
 
+" tagbar integration is useful, f can expose the full hierarchy.
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#tagbar#flags = 'f'
+
+let g:airline#extensions#tmuxline#enabled = 1
+let g:airline#extensions#nerdtree_statusline = 1
+
+let g:airline_theme = 'base16_gruvbox_dark_hard'
+
+
+" TODO: display only current used buffer.
+" let g:airline#extensions#tabline#enabled = 1
+
 
 " ===
-" === comfortable-motion
+" === easymotion
 " ===
+let g:EasyMotion_do_mapping = 1 " Enable default mappings
 
-let g:comfortable_motion_no_default_key_mappings = 1
-noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(10)<CR>
-noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-10)<CR>
 
 " ===
 " === gitgutter
@@ -255,7 +277,7 @@ let g:indentLine_enabled = 0
 " ===
 
 " open NERDTree automatically when vim starts up on opening a directory
-autocmd StdinReadPre * let s:std_in = 1
+autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 
 " donot display hidden file in nerdtree
@@ -265,7 +287,7 @@ let NERDTreeShowHidden = 0
 nmap <C-n> :NERDTreeToggle<CR>
 
 " change the CWD in each tab as the root dir of tab is changed.
-let g:NERDTreeChDirMode = 3
+let g:NERDTreeChDirMode = 2
 
 " Making it prettier
 let NERDTreeMinimalUI = 1
@@ -307,10 +329,13 @@ let g:tagbar_iconchars = ['▸', '▾']
 " === vimtex
 " ===
 
+" thanks to https://castel.dev/post/lecture-notes-1/
+let g:vimtex_enabled=1
 let g:tex_flavor='latex'
 let g:vimtex_view_method='skim'
 let g:vimtex_quickfix_mode=0
 set conceallevel=1
+let g:tex_conceal='abdmg'
 " TODO: add conceal plugin for vimtex.
 
 
@@ -332,6 +357,11 @@ nnoremap <leader>e :Leaderf bufTag<CR>
 nnoremap <leader>g :Leaderf gtags<CR>
 let g:Lf_Gtagslabel = 'default'
 
+" exclude while indexing.
+let g:Lf_WildIgnore = {
+        \ 'dir': ['.svn','.git','.hg', 'build', '.idea', 'cmake-build-debug'],
+        \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so', '*.dylib', '*.py[co]', '.DS_Store']
+        \}
 
 " ===
 " === termdebug
@@ -414,3 +444,11 @@ nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<C
 
 " NOTE: I tried to use undotree plugin, but it cause a little stall when I
 " turn to command mode.
+
+" TODO: modify the image.vim plugin to show image inside vim.
+
+
+" ===
+" === previm
+" ===
+let g:previm_open_cmd = 'open -a Google\ Chrome'
