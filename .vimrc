@@ -57,9 +57,9 @@ noremap <Left> <Nop>
 noremap <Right> <Nop>
 
 " quick copy all the file
-nnoremap <leader>y :,% y+<CR>
+nnoremap <leader>c :,% y+<CR>
 " quick copy the word in cursor to paste globally.
-nnoremap <leader>w "+yiw
+nnoremap <leader>y "+yiw
 
 " quick save file
 nnoremap <leader>s :<C-u>w<CR>
