@@ -68,7 +68,24 @@ nnoremap <leader>q :<C-u>q<CR>
 
 " quick compile and run this cpp file
 " TODO: use another shortcut key.
-nnoremap <leader>m :!clang++ -std=c++17 -Wall -Wextra -o tmpcpp % && ./tmpcpp && rm ./tmpcpp<CR>
+" nnoremap <leader>m :!clang++ -std=c++17 -Wall -Wextra -o tmpcpp % && ./tmpcpp && rm ./tmpcpp<CR>
+" TODO: this config mostly copy from https://github.com/theniceboy/nvim/blob/master/init.vim
+" modify and format it.
+" FIXME: Now it just work with cpp file.
+noremap R :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+	exec "w"
+  set splitbelow
+	if &filetype == 'c'
+		exec "!gcc % -Wall -Wextra -o %<"
+		:term ./%<
+	elseif &filetype == 'cpp'
+    exec "!g++ -std=c++11 % -Wall -Wextra -o %<"
+		:term ./%<"
+	elseif &filetype == 'python'
+		:term python3 %
+	endif
+endfunc
 
 " highlight all its matches of seaching command such as / and %.
 set hls
@@ -110,6 +127,7 @@ let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 call plug#begin('~/.vim/plugged')
 
 Plug 'morhetz/gruvbox'
+" Plug 'ajmwagar/vim-deus'
 Plug 'tpope/vim-abolish'
 " Plug 'dense-analysis/ale'
 Plug 'vim-airline/vim-airline'
@@ -138,6 +156,13 @@ Plug 'liuchengxu/vista.vim'
 Plug 'ashisha/image.vim', {'for': 'image'}
 Plug 'easymotion/vim-easymotion'
 Plug 'previm/previm', {'for': 'markdown'}
+Plug 'skywind3000/asynctasks.vim'
+Plug 'skywind3000/asyncrun.vim'
+" Plug 'bling/vim-bufferline'
+Plug 'itchyny/calendar.vim'
+Plug 'wincent/terminus'
+" Plug 'mg979/vim-xtabline'
+Plug 'rhysd/vim-clang-format', {'for': ['c', 'cpp']}
 
 " Initialize plugin system
 call plug#end()
@@ -146,6 +171,8 @@ call plug#end()
 " === Theme
 " ===
 
+" set t_Co=256
+" let g:deus_termcolors=256
 set background=dark
 colorscheme gruvbox
 
@@ -217,7 +244,7 @@ colorscheme gruvbox
 " " NOTE: it does not work if you use clangd.
 " let g:ale_cpp_clangd_options = ''
 
-" " clangformat options
+" " clang-format options
 " let g:ale_c_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
 " let g:ale_cpp_clangformat_options = '-style="{BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Right, ColumnLimit: 120}"'
 
@@ -389,7 +416,7 @@ let g:UltiSnipsEditSplit="vertical"
 " === coc.nvim
 " ===
 
-let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-clangd', 'coc-python', 'coc-sql', 'coc-sh', 'coc-cmake']
+let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-clangd', 'coc-pyls', 'coc-sql', 'coc-sh', 'coc-cmake']
 " Some servers have issues with backup files, see #649.
 set nobackup
 set nowritebackup
@@ -431,13 +458,16 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>F  <Plug>(coc-format-selected)
-nmap <leader>F  <Plug>(coc-format-selected)
+" FIXME: the taste of coc-format is not as delicious as vim-clang-format
+" NOTE: Just using it for format python code without much requirements.
+xmap <leader>v  <Plug>(coc-format)
+nmap <leader>v  <Plug>(coc-format)
 
 " Remap for do codeAction of selected region
 function! s:cocActionsOpenFromSelected(type) abort
   execute 'CocCommand actions.open ' . a:type
 endfunction
+
 xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' .  visualmode()<CR>
 nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 
@@ -452,3 +482,43 @@ nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<C
 " === previm
 " ===
 let g:previm_open_cmd = 'open -a Google\ Chrome'
+
+
+" ===
+" === asynctask
+" ===
+
+let g:asyncrun_open = 6
+
+
+" ===
+" === vim-clang-format
+" ===
+" XXX: Sadly, when you enable detect_style_file option, the style options is
+" not working any more.
+let g:clang_format#code_style = 'Google'
+" TODO: understanding and customizing style options.
+let g:clang_format#style_options = {
+            \ "DerivePointerAlignment": "false",
+            \ "PointerAlignment": "Right",
+            \ "ColumnLimit": 120}
+
+" NOTE: IF you want to format code based on your .clang-format file, please
+" use clang-format command directly or change detect_style_file option(not recommend).
+let g:clang_format#detect_style_file = 0
+let g:clang_format#auto_format = 0
+let g:clang_format#auto_format_on_insert_leave = 0
+
+noremap <leader>F :<C-u>ClangFormat<CR>
+
+
+" ===
+" === asynctask
+" ===
+" leave a note.
+
+
+" ===
+" === vim-snippets
+" ===
+" 😂, leave a note.
