@@ -390,6 +390,10 @@ let g:Lf_WildIgnore = {
         \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so', '*.dylib', '*.py[co]', '.DS_Store']
         \}
 
+let g:Lf_GtagsAutoUpdate = 1
+" for reindex file.
+let g:Lf_UseCache = 0
+
 " ===
 " === termdebug
 " ===
