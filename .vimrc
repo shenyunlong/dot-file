@@ -45,9 +45,9 @@ cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<CR>
 let mapleader = ','
 " this key is conflict with my Leaderf mapping key.
 " map <leader>ew :e %%
-map <leader>es :sp %%
-map <leader>ev :vsp %%
-map <leader>et :tabe %%
+" map <leader>es :sp %%
+" map <leader>ev :vsp %%
+" map <leader>et :tabe %%
 
 " disable arrowkey in vim
 " the arrowkey should be abandoned in vim
@@ -171,7 +171,7 @@ call plug#end()
 " === Theme
 " ===
 
-" set t_Co=256
+" set t_Co=16
 " let g:deus_termcolors=256
 set background=dark
 colorscheme gruvbox
@@ -386,7 +386,7 @@ let g:Lf_Gtagslabel = 'default'
 
 " exclude while indexing.
 let g:Lf_WildIgnore = {
-        \ 'dir': ['.svn','.git','.hg', 'build', '.idea', 'cmake-build-debug'],
+        \ 'dir': ['.svn','.git','.hg',  '.clangd', 'build', '.idea', 'cmake-build-debug'],
         \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so', '*.dylib', '*.py[co]', '.DS_Store']
         \}
 
