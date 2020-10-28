@@ -13,6 +13,8 @@ set ts=4 sts=4 expandtab sw=4   " tabstop, softtabstop, shiftwidth: indent
 set sr  " shiftround
 set ic  " ignorecase, and you can use \C in pattern to force match case
 
+set nowrap
+
 " the # of spcae of indent in cpp is 2 ps: c is 4
 autocmd FileType cpp set sw=2 ts=2 sts=2
 
@@ -420,7 +422,7 @@ let g:UltiSnipsEditSplit="vertical"
 " === coc.nvim
 " ===
 
-let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-clangd', 'coc-pyls', 'coc-sql', 'coc-sh', 'coc-cmake']
+let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-clangd', 'coc-pyls', 'coc-sql', 'coc-sh', 'coc-cmake', 'coc-marketplace']
 " Some servers have issues with backup files, see #649.
 set nobackup
 set nowritebackup
@@ -464,6 +466,7 @@ nmap <leader>rn <Plug>(coc-rename)
 " Formatting selected code.
 " FIXME: the taste of coc-format is not as delicious as vim-clang-format
 " NOTE: Just using it for format python code without much requirements.
+" XXX: tbh, coc-format is extremly stupid.
 xmap <leader>v  <Plug>(coc-format)
 nmap <leader>v  <Plug>(coc-format)
 
