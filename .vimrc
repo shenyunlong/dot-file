@@ -13,7 +13,7 @@ set ts=4 sts=4 expandtab sw=4   " tabstop, softtabstop, shiftwidth: indent
 set sr  " shiftround
 set ic  " ignorecase, and you can use \C in pattern to force match case
 
-set nowrap
+set wrap
 
 " the # of spcae of indent in cpp is 2 ps: c is 4
 autocmd FileType cpp set sw=2 ts=2 sts=2
