@@ -165,6 +165,11 @@ Plug 'itchyny/calendar.vim'
 Plug 'wincent/terminus'
 " Plug 'mg979/vim-xtabline'
 Plug 'rhysd/vim-clang-format', {'for': ['c', 'cpp']}
+Plug 'puremourning/vimspector'
+Plug 'chrisbra/csv.vim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'roxma/vim-tmux-clipboard'
+" Plug 'mg979/vim-visual-multi'
 
 " Initialize plugin system
 call plug#end()
@@ -384,7 +389,8 @@ nnoremap <leader>r :Leaderf mru<CR>
 let g:Lf_GtagsAutoGenerate = 1
 nnoremap <leader>e :Leaderf bufTag<CR>
 nnoremap <leader>g :Leaderf gtags<CR>
-let g:Lf_Gtagslabel = 'default'
+let g:Lf_Gtagslabel = 'new-ctags'
+" let g:Lf_Gtagslabel = 'native-pygments'
 
 " exclude while indexing.
 let g:Lf_WildIgnore = {
@@ -422,7 +428,7 @@ let g:UltiSnipsEditSplit="vertical"
 " === coc.nvim
 " ===
 
-let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-clangd', 'coc-pyls', 'coc-sql', 'coc-sh', 'coc-cmake', 'coc-marketplace']
+let g:coc_global_extensions = ['coc-vimlsp', 'coc-json', 'coc-pyright', 'coc-clangd', 'coc-sql', 'coc-sh', 'coc-cmake', 'coc-marketplace']
 " Some servers have issues with backup files, see #649.
 set nobackup
 set nowritebackup
@@ -526,6 +532,19 @@ noremap <leader>F :<C-u>ClangFormat<CR>
 
 
 " ===
+" === vimspector
+" ===
+let g:vimspector_enable_mappings = 'HUMAN'
+
+
+" ===
+" === vim-visual-multi
+" ===
+let g:VM_maps = {}
+let g:VM_maps['Find Under']         = '<C-j>'
+let g:VM_maps['Find Subword Under'] = '<C-j>'
+
+" leave a note.
+" ===
 " === vim-snippets
 " ===
-" 😂, leave a note.
