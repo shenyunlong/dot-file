@@ -15,7 +15,7 @@ RUN apt-get update && \
   apt-get -y upgrade && \
   apt-get install -y build-essential && \
   apt-get install -y software-properties-common  && \
-  apt-get install -y sudo curl git htop man unzip wget cmake gdb zsh tmux global vim
+  apt-get install -y sudo curl git htop man unzip wget cmake gdb zsh tmux global vim ctags clangd
 
 # # vim 8.2
 # RUN add-apt-repository ppa:jonathonf/vim && \
